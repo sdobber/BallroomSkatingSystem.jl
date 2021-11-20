@@ -220,3 +220,93 @@ end
     @test pl[!, :Number] == resultsW[!, :Number]
     @test pl[!, :Place] == [1, 2, 3, 4, 5, 6]
 end
+
+@testset "Rule 11d" begin
+    dances = ["Waltz", "Tango", "Viennese Waltz", "Slowfox", "Quickstep"]
+
+    resultsW = DataFrame(Number = [25, 35, 45, 55, 65, 75],
+        JudgeA = [1, 2, 4, 3, 6, 5],
+        JudgeB = [1, 2, 5, 3, 6, 4],
+        JudgeC = [2, 5, 3, 6, 1, 4],
+        JudgeD = [5, 2, 1, 3, 4, 6],
+        JudgeE = [3, 5, 1, 6, 4, 2])
+
+    resultsT = DataFrame(Number = [25, 35, 45, 55, 65, 75],
+        JudgeA = [1, 5, 3, 4, 2, 6],
+        JudgeB = [2, 3, 1, 4, 5, 6],
+        JudgeC = [2, 1, 3, 4, 5, 6],
+        JudgeD = [3, 2, 1, 4, 5, 6],
+        JudgeE = [4, 2, 3, 1, 5, 6])
+
+    resultsV = DataFrame(Number = [25, 35, 45, 55, 65, 75],
+        JudgeA = [1, 3, 5, 2, 4, 6],
+        JudgeB = [1, 2, 3, 6, 4, 5],
+        JudgeC = [2, 1, 3, 6, 5, 4],
+        JudgeD = [2, 1, 6, 3, 5, 4],
+        JudgeE = [3, 2, 1, 4, 6, 5])
+
+    resultsS = DataFrame(Number = [25, 35, 45, 55, 65, 75],
+        JudgeA = [2, 1, 5, 3, 6, 4],
+        JudgeB = [2, 1, 6, 3, 4, 5],
+        JudgeC = [5, 2, 3, 1, 6, 4],
+        JudgeD = [1, 5, 2, 3, 6, 4],
+        JudgeE = [5, 2, 3, 6, 4, 1])
+
+    resultsQ = DataFrame(Number = [25, 35, 45, 55, 65, 75],
+        JudgeA = [2, 1, 3, 5, 4, 6],
+        JudgeB = [6, 5, 2, 1, 4, 3],
+        JudgeC = [2, 1, 4, 5, 6, 3],
+        JudgeD = [6, 5, 2, 1, 3, 4],
+        JudgeE = [1, 2, 4, 3, 6, 5])
+
+    results = [resultsW, resultsT, resultsV, resultsS, resultsQ]
+
+    places_text, rule10_text, rule11_text, pl = skating_combined(dances, results)
+    @test pl[!, :Number] == resultsW[!, :Number]
+    @test pl[!, :Place] == [2, 1, 3, 4, 6, 5]
+end
+
+@testset "Rule 11b" begin
+    dances = ["Waltz", "Tango", "Viennese Waltz", "Slowfox", "Quickstep"]
+
+    resultsW = DataFrame(Number = [27, 37, 47, 57, 67, 77],
+        JudgeA = [2, 3, 4, 1, 6, 5],
+        JudgeB = [2, 3, 5, 1, 6, 4],
+        JudgeC = [5, 6, 3, 2, 1, 4],
+        JudgeD = [2, 3, 1, 5, 4, 6],
+        JudgeE = [5, 6, 1, 3, 4, 2])
+
+    resultsT = DataFrame(Number = [27, 37, 47, 57, 67, 77],
+        JudgeA = [1, 3, 2, 4, 6, 5],
+        JudgeB = [2, 1, 5, 4, 6, 3],
+        JudgeC = [2, 3, 5, 4, 6, 1],
+        JudgeD = [3, 1, 5, 4, 6, 2],
+        JudgeE = [4, 3, 5, 1, 6, 2])
+
+    resultsV = DataFrame(Number = [27, 37, 47, 57, 67, 77],
+        JudgeA = [1, 2, 3, 4, 5, 6],
+        JudgeB = [1, 3, 4, 5, 2, 6],
+        JudgeC = [1, 4, 5, 6, 2, 3],
+        JudgeD = [1, 5, 6, 2, 3, 4],
+        JudgeE = [1, 6, 2, 3, 4, 5])
+
+    resultsS = DataFrame(Number = [27, 37, 47, 57, 67, 77],
+        JudgeA = [3, 1, 4, 5, 2, 6],
+        JudgeB = [3, 1, 5, 6, 2, 4],
+        JudgeC = [1, 2, 4, 3, 5, 6],
+        JudgeD = [3, 5, 4, 2, 1, 6],
+        JudgeE = [6, 2, 1, 3, 5, 4])
+
+    resultsQ = DataFrame(Number = [27, 37, 47, 57, 67, 77],
+        JudgeA = [2, 4, 1, 6, 5, 3],
+        JudgeB = [6, 4, 5, 3, 1, 2],
+        JudgeC = [2, 6, 1, 3, 5, 4],
+        JudgeD = [6, 3, 5, 4, 1, 2],
+        JudgeE = [1, 6, 2, 5, 4, 3])
+
+    results = [resultsW, resultsT, resultsV, resultsS, resultsQ]
+
+    places_text, rule10_text, rule11_text, pl = skating_combined(dances, results)
+    @test pl[!, :Number] == resultsW[!, :Number]
+    @test pl[!, :Place] == [1, 2, 3, 4, 5, 6]
+end

@@ -74,13 +74,14 @@ function skating_combined(dances, results_single_dances, places, reports)
                         rule11_text[idx[id[i]], (current_place+1):end] .= skating_text[!, (current_place+1):end]
                         current_place += 2
                     else
-                        j = findall(==(minimum(skating_result[!, :Places])), skating_result[!, :Places])
+                        j = findall(==(minimum(skating_result[!, :Place])), skating_result[!, :Place])
                         if length(j) == 1
                             index = idx[id[i[j[1]]]]
-                            places[index, :Place] .= skating_result[j[1], :Place]
+                            places[index, :Place] = skating_result[j[1], :Place]
                             places[index, :Sum] = 1000 + current_place
-                            places_text[index, :Place] .= skating_text[j[1], :Place]
-                            rule11_text[idx[id[i]], (current_place+1):end] .= skating_text[!, (current_place+1):end]
+                            places_text[index, :Place] = skating_text[j[1], :Place]
+                            rule11_text[idx[id[i]], (current_place+1):(end-1)] .= skating_text[!, (current_place+1):(end-1)]
+                            rule11_text[index, :Place] = skating_text[j[1], :Place]
                             current_place += 1
                         else
                             ### shared place?
