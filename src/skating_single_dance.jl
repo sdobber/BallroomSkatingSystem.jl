@@ -6,10 +6,11 @@ end
 
 
 ## Majority system for individual dances
-function skating_single_dance(results::DataFrame, majority_from::Int; initial_place::Int = 1, initial_column::Int = 1)
+function skating_single_dance(results::DataFrame, majority_from::Int; initial_place::Int = 1,
+    initial_column::Int = 1, depth = size(results, 1))
     calculation = DataFrame(Number = results[!, :Number])
     sum_of_eval = DataFrame(Number = results[!, :Number])
-    for i = 1:size(calculation, 1)
+    for i = 1:depth
         insertcols!(calculation, Symbol("1-$(i)") => vec(count(<=(i), results[!, Not(:Number)] |> Array, dims = 2)))
         if i == 1
             insertcols!(sum_of_eval, Symbol("1-$(i)") => calculation[:, i+1])
@@ -22,14 +23,15 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
     calculation_text = string.(copy(calculation))
 
     current_place = initial_place
-    max_cols = size(calculation, 1)
+    max_cols = depth
     current_col = initial_column
     tmp_col = initial_column
     steps = 0
     append_sum = false
-    while current_place <= size(results, 1) && steps <= 10
-        @info steps
+    while current_place <= (initial_column - 1 + size(results, 1)) && steps <= 10
+        # @info steps
         # clear majority
+        @show current_col
         if count(>=(majority_from), calculation[!, current_col+1], dims = 1)[1] == 1
             @info "Clear Majority"
             idx = findfirst(>=(majority_from), calculation[!, current_col+1])
@@ -113,8 +115,9 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
     return calculation_text, calculation[!, [:Number, :Place]]
 end
 
-function skating_single_dance(results::DataFrame; initial_place = 1, initial_column = 1)
-    return skating_single_dance(results::DataFrame, calc_majority(results); initial_place = 1, initial_column = 1)
+function skating_single_dance(results::DataFrame; initial_place = 1, initial_column = 1, depth = size(results, 1))
+    return skating_single_dance(results::DataFrame, calc_majority(results);
+        initial_place = initial_place, initial_column = initial_column, depth = depth)
 end
 
 function calc_majority(results)

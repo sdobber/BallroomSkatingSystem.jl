@@ -1,6 +1,11 @@
 using BallroomSkatingSystem
 using Test
 
+# fixture for tests
+function BallroomSkatingSystem.get_rule11_table(::Nothing)
+    return nothing
+end
+
 @testset "Individual Dances" begin
     results1 = DataFrame(Number = [11, 12, 13, 14, 15],
         JudgeA = [1, 2, 3, 4, 5],
@@ -101,32 +106,32 @@ end
         Quickstep = [2, 4, 3, 1, 6, 5])
 
     # Rule 10c
-    places_text, rule10_text, rule11_text, pl1 = skating_combined(dances, [], places1, [])
+    places_text, rule10_text, rule11_text, pl1 = skating_combined(dances, nothing, places1, [])
     @test pl1[!, :Number] == places1[!, :Number]
     @test pl1[!, :Place] == [1, 2, 3, 4, 5, 6]
 
     # Rule 10b (second part) and 10d
-    places_text, rule10_text, rule11_text, pl2 = skating_combined(dances, [], places2, [])
+    places_text, rule10_text, rule11_text, pl2 = skating_combined(dances, nothing, places2, [])
     @test pl2[!, :Number] == places2[!, :Number]
     @test pl2[!, :Place] == [1, 2, 3, 4, 5, 6]
 
     # Rule 10b (first part) and 10d
-    places_text, rule10_text, rule11_text, pl3 = skating_combined(dances, [], places3, [])
+    places_text, rule10_text, rule11_text, pl3 = skating_combined(dances, nothing, places3, [])
     @test pl3[!, :Number] == places3[!, :Number]
     @test pl3[!, :Place] == [1, 2, 3, 4, 5, 6]
 
     # Rule 10a and 10b
-    places_text, rule10_text, rule11_text, pl4 = skating_combined(dances, [], places4, [])
+    places_text, rule10_text, rule11_text, pl4 = skating_combined(dances, nothing, places4, [])
     @test pl4[!, :Number] == places4[!, :Number]
     @test pl4[!, :Place] == [1, 2, 4, 3, 6, 5]
 
     # Rule 9
-    places_text, rule10_text, rule11_text, pl5 = skating_combined(dances, [], places5, [])
+    places_text, rule10_text, rule11_text, pl5 = skating_combined(dances, nothing, places5, [])
     @test pl5[!, :Number] == places5[!, :Number]
     @test pl5[!, :Place] == [1, 2, 3, 4, 5, 6]
 end
 
-@testset "Multiple Dances with Rule 11" begin
+@testset "Rule 11a, 11b, 11c" begin
     dances = ["Waltz", "Tango", "Viennese Waltz", "Slowfox", "Quickstep"]
 
     resultsW = DataFrame(Number = [25, 35, 45, 55, 65, 75],
@@ -167,4 +172,6 @@ end
     results = [resultsW, resultsT, resultsV, resultsS, resultsQ]
 
     places_text, rule10_text, rule11_text, pl = skating_combined(dances, results)
+    @test pl[!, :Number] == resultsW[!, :Number]
+    @test pl[!, :Place] == [2, 1, 3, 4, 6, 5]
 end

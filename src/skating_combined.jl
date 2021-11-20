@@ -61,6 +61,31 @@ function skating_combined(dances, results_single_dances, places, reports)
                     current_place += 1
                 else
                     # Rule 11
+                    @info "Rule 11"
+                    @show idx[id[i]]
+                    @show current_place
+                    skating_text, skating_result = skating_single_dance(rule11_table[idx[id[i]], :];
+                        initial_place = current_place, initial_column = current_place, depth = size(places, 1))
+                    @show skating_text
+                    if length(i) == 2
+                        places[idx[id[i]], :Place] .= skating_result[!, :Place]
+                        places[idx[id[i]], :Sum] .= 1000 + current_place
+                        places_text[idx[id[i]], :Place] .= skating_text[!, :Place]
+                        rule11_text[idx[id[i]], (current_place+1):end] .= skating_text[!, (current_place+1):end]
+                        current_place += 2
+                    else
+                        j = findall(==(minimum(skating_result[!, :Places])), skating_result[!, :Places])
+                        if length(j) == 1
+                            index = idx[id[i[j[1]]]]
+                            places[index, :Place] .= skating_result[j[1], :Place]
+                            places[index, :Sum] = 1000 + current_place
+                            places_text[index, :Place] .= skating_text[j[1], :Place]
+                            rule11_text[idx[id[i]], (current_place+1):end] .= skating_text[!, (current_place+1):end]
+                            current_place += 1
+                        else
+                            ### shared place?
+                        end
+                    end
 
                 end
             end
