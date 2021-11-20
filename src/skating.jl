@@ -69,16 +69,16 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
                     # id = findall(==(maximum(calculation[idx, current_col+1]), calculation[idx, current_col+1]))
                     # look at sum of evaluations up to current column
                     if length(findall(==(maximum(sum_of_eval[idx, tmp_col+1])), sum_of_eval[idx, tmp_col+1])) == 1
-                        @info "Single sum majority"
-                        id = findfirst(==(maximum(sum_of_eval[idx, tmp_col+1])), sum_of_eval[idx, tmp_col+1])
-                        calculation[id, :Place] = current_place
-                        calculation_text[id, :Place] = string(current_place)
-                        calculation_text[id, (tmp_col+1)] = string(calculation[id, (tmp_col+1)]) * "*" * "(" * string(sum_of_eval[id, (tmp_col+1)]) * ")"
-                        calculation_text[id, (tmp_col+2):(max_cols+1)] .= "-"
-                        calculation[id, (current_col+1):(max_cols+1)] .= 0
+                        @info "Single sum minority"
+                        id = findfirst(==(minimum(sum_of_eval[idx, tmp_col+1])), sum_of_eval[idx, tmp_col+1])
+                        calculation[idx[id], :Place] = current_place
+                        calculation_text[idx[id], :Place] = string(current_place)
+                        calculation_text[idx[id], (tmp_col+1)] = string(calculation[idx[id], (tmp_col+1)]) * "*" * "(" * string(sum_of_eval[idx[id], (tmp_col+1)]) * ")"
+                        calculation_text[idx[id], (tmp_col+2):(max_cols+1)] .= "-"
+                        calculation[idx[id], (current_col+1):(max_cols+1)] .= 0
                         current_place += 1
                         append_sum = true
-                        remove!(idx, id)
+                        remove!(idx, idx[id])
                     else
                         # TO DO
                         @info "else"
