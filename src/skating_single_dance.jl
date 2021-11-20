@@ -114,5 +114,5 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
 end
 
 function skating_single_dance(results::DataFrame; initial_place = 1, initial_column = 1)
-    skating_single_dance(results::DataFrame, Int((size(results, 2) - 2) / 2 + 1); initial_place = 1, initial_column = 1)
+    return skating_single_dance(results::DataFrame, Int((size(results, 2) - 2) / 2 + 1); initial_place = 1, initial_column = 1)
 end
