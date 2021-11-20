@@ -1,6 +1,6 @@
 ## Skating system for final placement
 
-function skating_combined(dances, results_single_dances, places)
+function skating_combined(dances, results_single_dances, places, reports)
     rule10_counts = DataFrame(Number = places[!, :Number])
     rule10_sums = DataFrame(Number = places[!, :Number])
     # num_of_places = DataFrame(Number = results[!, :Number])
@@ -20,9 +20,9 @@ function skating_combined(dances, results_single_dances, places)
     rule10_text = string.(copy(rule10_counts))
     rule10_text[!, Not(:Number)] .= "-"
     rule10_text[!, :Place] .= "-"
-    rule11_text = copy(rule10_text)
 
-    # rule11_calc = copy(rule10_counts)
+    rule11_table = get_rule11_table(results_single_dances)
+    rule11_text = copy(rule10_text)
 
     current_place = 1
     steps = 1
@@ -72,9 +72,22 @@ function skating_combined(dances, results_single_dances, places)
 end
 
 function skating_combined(dances, results_single_dances)
-    return skating_combined(dances, results_single_dances, get_places(dances, results_single_dances))
+    return skating_combined(dances, results_single_dances, get_places(dances, results_single_dances)...)
 end
 
 function get_places(dances, results_single_dances)
+    places = DataFrame(Number = results_single_dances[1][!, :Number])
+    reports = []
+    for (i, df) in enumerate(results_single_dances)
+        report, pl = skating_single_dance(df)
+        push!(reports, report)
+        insertcols!(places, Symbol(dances[i]) => pl[!, :Place])
+    end
+    return places, reports
+end
 
+function get_rule11_table(results_single_dances)
+    numbers = DataFrame(Number = results_single_dances[1][!, :Number])
+    df_cat = hcat([df[!, Not(:Number)] for df in results_single_dances]..., makeunique = true)
+    return hcat(numbers, df_cat)
 end
