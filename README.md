@@ -4,7 +4,7 @@
 [![Build Status](https://github.com/sdobber/BallroomSkatingSystem.jl/workflows/CI/badge.svg)](https://github.com/sdobber/BallroomSkatingSystem.jl/actions)
 [![Coverage](https://codecov.io/gh/sdobber/BallroomSkatingSystem.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/sdobber/BallroomSkatingSystem.jl)
 
-This package implements the skating system of compiling scores in ballroom dance competitions.
+This package implements the skating system of compiling scores in ballroom dance competitions. See the documentation for usage and examples.
 
 
 ## :warning: Disclaimer
@@ -18,15 +18,3 @@ BallroomSkatingSystem.jl is *not* a registered package. To install, type `]` at 
 ```
 add https://github.com/sdobber/BallroomSkatingSystem.jl
 ```
-
-
-## Known issues
-
-* Implementation of Rule 11 is pending.
-
-
-## More Information
-
-* Wiki page for the Skating system: https://en.wikipedia.org/wiki/Skating_system
-* WDSF pdf file of the rules: https://www.worlddancesport.org/Document/99473179446/The_Skating_System.pdf (see also https://www.worlddancesport.org/Rule/Competition/General/Judging_Systems)
-* Description of the rules (in German): https://tso.turnierprotokoll.de/tso_anh2.htm

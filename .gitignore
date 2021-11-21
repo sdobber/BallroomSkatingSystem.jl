@@ -2,4 +2,5 @@ Manifest.toml
 *.jl.*.cov
 *.jl.cov
 *.jl.mem
+*.DS_STORE
 /docs/build/

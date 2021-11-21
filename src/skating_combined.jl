@@ -1,5 +1,17 @@
 ## Skating system for final placement
 
+"""
+    skating_combined(dances, results_single_dances)
+
+Calculates the final placement of competitors in a dancing competition based on the skating
+rules. `dances` is a vector of strings, containing the names of the dances. 
+`results_single_dances` is a vector of DataFrames, containing the results for the individual
+dances. See [`skating_single_dance`](@ref) for the correct input format.
+
+Outputs a DataFrame with the accumulated skating tableau as strings, a vector containing 
+tableaus containing the application of Rule 10 and Rule 11, the skating results for the
+individual dances as well as a DataFrame with the starter numbers and final places.
+"""
 function skating_combined(dances, results_single_dances, places, reports)
     rule10_counts = DataFrame(Number = places[!, :Number])
     rule10_sums = DataFrame(Number = places[!, :Number])
@@ -109,6 +121,11 @@ function skating_combined(dances, results_single_dances)
     return skating_combined(dances, results_single_dances, get_places(dances, results_single_dances)...)
 end
 
+"""
+    get_places(dances, results_single_dances)
+
+Collects the skating results for a vector of dances and result DataFrames.
+"""
 function get_places(dances, results_single_dances)
     places = DataFrame(Number = results_single_dances[1][!, :Number])
     reports = []
@@ -120,6 +137,12 @@ function get_places(dances, results_single_dances)
     return places, reports
 end
 
+"""
+    get_rule11_table(results_single_dances)
+
+Prepares a DataFrame with all judgements concatenated into a single table for use when 
+applying Rule 11.
+"""
 function get_rule11_table(results_single_dances)
     numbers = DataFrame(Number = results_single_dances[1][!, :Number])
     df_cat = hcat([df[!, Not(:Number)] for df in results_single_dances]..., makeunique = true)
