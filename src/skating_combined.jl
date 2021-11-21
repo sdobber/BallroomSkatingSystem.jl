@@ -62,11 +62,8 @@ function skating_combined(dances, results_single_dances, places, reports)
                 else
                     # Rule 11
                     @info "Rule 11"
-                    @show idx[id[i]]
-                    @show current_place
                     skating_text, skating_result = skating_single_dance(rule11_table[idx[id[i]], :];
                         initial_place = current_place, initial_column = current_place, depth = size(places, 1))
-                    @show skating_text
                     if length(i) == 2
                         places[idx[id[i]], :Place] .= skating_result[!, :Place]
                         places[idx[id[i]], :Sum] .= 1000 + current_place
@@ -84,7 +81,18 @@ function skating_combined(dances, results_single_dances, places, reports)
                             rule11_text[index, :Place] = skating_text[j[1], :Place]
                             current_place += 1
                         else
-                            ### shared place?
+                            @info "Rule 11 Tie"
+                            # shared place
+                            # code can probably be joined with the above part
+                            index = idx[id[i[j]]]
+                            place_list = range(current_place, length = length(j))
+                            place = mean(place_list)
+                            places[index, :Place] .= place
+                            places[index, :Sum] .= 1000 + current_place
+                            places_text[index, :Place] .= string(place)
+                            rule11_text[index, (current_place+1):(end-1)] .= skating_text[!, (current_place+1):(end-1)]
+                            rule11_text[index, :Place] .= string(place)
+                            current_place = maximum(place_list) + 1
                         end
                     end
 

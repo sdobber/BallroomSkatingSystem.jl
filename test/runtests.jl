@@ -310,3 +310,35 @@ end
     @test pl[!, :Number] == resultsW[!, :Number]
     @test pl[!, :Place] == [1, 2, 3, 4, 5, 6]
 end
+
+@testset "Tie with Rule 11" begin
+    # Artificial example to hit code
+    dances = ["Waltz", "Tango", "Viennese Waltz"]
+
+    resultsW = DataFrame(Number = [10, 20, 30],
+        JudgeA = [1, 1, 1],
+        JudgeB = [1, 1, 1],
+        JudgeC = [1, 1, 1],
+        JudgeD = [1, 1, 1],
+        JudgeE = [1, 1, 1])
+
+    resultsT = DataFrame(Number = [10, 20, 30],
+        JudgeA = [1, 1, 1],
+        JudgeB = [1, 1, 1],
+        JudgeC = [1, 1, 1],
+        JudgeD = [1, 1, 1],
+        JudgeE = [1, 1, 1])
+
+    resultsV = DataFrame(Number = [10, 20, 30],
+        JudgeA = [1, 1, 1],
+        JudgeB = [1, 1, 1],
+        JudgeC = [1, 1, 1],
+        JudgeD = [1, 1, 1],
+        JudgeE = [1, 1, 1])
+
+    results = [resultsW, resultsT, resultsV]
+
+    places_text, rule10_text, rule11_text, pl = skating_combined(dances, results)
+    @test pl[!, :Number] == resultsW[!, :Number]
+    @test pl[!, :Place] == [2, 2, 2]
+end
