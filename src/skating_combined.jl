@@ -102,7 +102,7 @@ function skating_combined(dances, results_single_dances, places, reports)
 
         steps += 1
     end
-    return places_text, rule10_text, rule11_text, places[!, [:Number, :Place]]
+    return places_text, [rule10_text, rule11_text], reports, places[!, [:Number, :Place]]
 end
 
 function skating_combined(dances, results_single_dances)
