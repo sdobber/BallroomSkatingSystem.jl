@@ -1,15 +1,3 @@
-## Helper functions
-
-"""
-    remove!(a, item)
-
-Removes `item` from the collection `a`.
-"""
-function remove!(a, item)
-    deleteat!(a, findfirst(==(item), a))
-end
-
-
 ## Majority system for individual dances
 
 """
@@ -38,16 +26,8 @@ the calculation can be defined by keyword arguments.
 """
 function skating_single_dance(results::DataFrame, majority_from::Int; initial_place::Int = 1,
     initial_column::Int = 1, depth = size(results, 1))
-    calculation = DataFrame(Number = results[!, :Number])
-    sum_of_eval = DataFrame(Number = results[!, :Number])
-    for i = 1:depth
-        insertcols!(calculation, Symbol("1-$(i)") => vec(count(<=(i), results[!, Not(:Number)] |> Array, dims = 2)))
-        if i == 1
-            insertcols!(sum_of_eval, Symbol("1-$(i)") => calculation[:, i+1])
-        else
-            insertcols!(sum_of_eval, Symbol("1-$(i)") => i .* (calculation[:, i+1] - calculation[:, i]) + sum_of_eval[:, i])
-        end
-    end
+
+    calculation, sum_of_eval = prepare_sums(results, depth)
 
     calculation[!, :Place] .= 0.0
     calculation_text = string.(copy(calculation))
