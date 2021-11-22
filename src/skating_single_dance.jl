@@ -41,11 +41,7 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
         if count(>=(majority_from), calculation[!, current_col+1], dims = 1)[1] == 1
             # @info "Clear Majority"
             idx = findfirst(>=(majority_from), calculation[!, current_col+1])
-            calculation[idx, :Place] = current_place
-            calculation_text[idx, :Place] = string(current_place)
-            calculation_text[idx, (current_col+1)] = string(calculation[idx, (current_col+1)]) * "*"
-            calculation_text[idx, (current_col+2):(max_cols+1)] .= "-"
-            calculation[idx, (current_col+1):(max_cols+1)] .= 0
+            write_result!(calculation, calculation_text, sum_of_eval, idx, current_place, current_col, current_col, max_cols)
             current_place += 1
             current_col += 1
         else
@@ -56,15 +52,7 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
                 if count(==(maximum(calculation[idx, tmp_col+1])), calculation[idx, tmp_col+1]) == 1
                     # @info "Single maximal majority"
                     id = idx[findfirst(==(maximum(calculation[idx, tmp_col+1])), calculation[idx, tmp_col+1])]
-                    calculation[id, :Place] = current_place
-                    calculation_text[id, :Place] = string(current_place)
-                    str = string(calculation[id, (tmp_col+1)]) * "*"
-                    if append_sum
-                        str = str * "(" * string(sum_of_eval[id, (tmp_col+1)]) * ")"
-                    end
-                    calculation_text[id, (tmp_col+1)] = str
-                    calculation_text[id, (tmp_col+2):(max_cols+1)] .= "-"
-                    calculation[id, (current_col+1):(max_cols+1)] .= 0
+                    write_result!(calculation, calculation_text, sum_of_eval, id, current_place, current_col, tmp_col, max_cols; append_sum = append_sum)
                     current_place += 1
                     append_sum = false
                     remove!(idx, id)
@@ -74,11 +62,7 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
                     if length(findall(==(maximum(sum_of_eval[idx, tmp_col+1])), sum_of_eval[idx, tmp_col+1])) == 1
                         # @info "Single sum minority"
                         id = findfirst(==(minimum(sum_of_eval[idx, tmp_col+1])), sum_of_eval[idx, tmp_col+1])
-                        calculation[idx[id], :Place] = current_place
-                        calculation_text[idx[id], :Place] = string(current_place)
-                        calculation_text[idx[id], (tmp_col+1)] = string(calculation[idx[id], (tmp_col+1)]) * "*" * "(" * string(sum_of_eval[idx[id], (tmp_col+1)]) * ")"
-                        calculation_text[idx[id], (tmp_col+2):(max_cols+1)] .= "-"
-                        calculation[idx[id], (current_col+1):(max_cols+1)] .= 0
+                        write_result!(calculation, calculation_text, sum_of_eval, idx[id], current_place, current_col, tmp_col, max_cols; append_sum = true)
                         current_place += 1
                         append_sum = true
                         remove!(idx, idx[id])
@@ -120,4 +104,23 @@ Returns the judge majority for a result DataFrame `results`.
 """
 function calc_majority(results)
     return Int((size(results, 2) - 2) / 2 + 1)
+end
+
+"""
+    write_result!(calculation, calculation_text, sum_of_eval, id, current_place, current_col, tmp_col, max_cols; append_sum = false)
+
+Write the result of the skating procedure to the DataFrames containing placement and summary
+information. Remove the parts that are not needed anymore.
+"""
+function write_result!(calculation, calculation_text, sum_of_eval, id, current_place, current_col, tmp_col, max_cols;
+    append_sum = false)
+    calculation[id, :Place] = current_place
+    calculation_text[id, :Place] = string(current_place)
+    str = string(calculation[id, (tmp_col+1)]) * "*"
+    if append_sum
+        str = str * "(" * string(sum_of_eval[id, (tmp_col+1)]) * ")"
+    end
+    calculation_text[id, (tmp_col+1)] = str
+    calculation_text[id, (tmp_col+2):(max_cols+1)] .= "-"
+    calculation[id, (current_col+1):(max_cols+1)] .= 0
 end
