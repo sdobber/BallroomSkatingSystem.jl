@@ -15,7 +15,6 @@ individual dances as well as a DataFrame with the starter numbers and final plac
 function skating_combined(dances, results_single_dances, places, reports)
     rule10_counts = DataFrame(Number = places[!, :Number])
     rule10_sums = DataFrame(Number = places[!, :Number])
-    # num_of_places = DataFrame(Number = results[!, :Number])
 
     # code similar to above - reuse!
     for i = 1:size(rule10_counts, 1)
@@ -37,13 +36,10 @@ function skating_combined(dances, results_single_dances, places, reports)
     rule11_text = copy(rule10_text)
 
     current_place = 1
-    steps = 1
-    while current_place <= size(places, 1) && steps <= 10
-        @info steps
+    while current_place <= size(places, 1)
         idx = findall(==(minimum(places[!, :Sum])), places[!, :Sum])
-        @show idx
         if length(idx) == 1
-            @info "Minimum sum"
+            # @info "Minimum sum"
             places[idx[1], :Place] = current_place
             places[idx[1], :Sum] = 1000 + current_place
             places_text[idx[1], :Place] = string(current_place)
@@ -51,9 +47,8 @@ function skating_combined(dances, results_single_dances, places, reports)
         else
             # Rule 10
             id = findall(==(maximum(rule10_counts[idx, current_place+1])), rule10_counts[idx, current_place+1])
-            @show id
             if length(id) == 1
-                @info "Minimum better places"
+                # @info "Minimum better places"
                 places[idx[id[1]], :Place] = current_place
                 places[idx[id[1]], :Sum] = 1000 + current_place
                 places_text[idx[id[1]], :Place] = string(current_place)
@@ -61,9 +56,8 @@ function skating_combined(dances, results_single_dances, places, reports)
                 rule10_text[idx[id[1]], :Place] = string(current_place)
                 current_place += 1
             else
-                @info "Minimum better summed places"
+                # @info "Minimum better summed places"
                 i = findall(==(minimum(rule10_sums[idx[id], current_place+1])), rule10_sums[idx[id], current_place+1])
-                @show i
                 if length(i) == 1
                     places[idx[id[i[1]]], :Place] = current_place
                     places[idx[id[i[1]]], :Sum] = 1000 + current_place
@@ -73,7 +67,7 @@ function skating_combined(dances, results_single_dances, places, reports)
                     current_place += 1
                 else
                     # Rule 11
-                    @info "Rule 11"
+                    # @info "Rule 11"
                     skating_text, skating_result = skating_single_dance(rule11_table[idx[id[i]], :];
                         initial_place = current_place, initial_column = current_place, depth = size(places, 1))
                     if length(i) == 2
@@ -93,7 +87,7 @@ function skating_combined(dances, results_single_dances, places, reports)
                             rule11_text[index, :Place] = skating_text[j[1], :Place]
                             current_place += 1
                         else
-                            @info "Rule 11 Tie"
+                            # @info "Rule 11 Tie"
                             # shared place
                             # code can probably be joined with the above part
                             index = idx[id[i[j]]]
@@ -107,12 +101,9 @@ function skating_combined(dances, results_single_dances, places, reports)
                             current_place = maximum(place_list) + 1
                         end
                     end
-
                 end
             end
         end
-
-        steps += 1
     end
     return places_text, [rule10_text, rule11_text], reports, places[!, [:Number, :Place]]
 end

@@ -56,14 +56,10 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
     max_cols = depth
     current_col = initial_column
     tmp_col = initial_column
-    steps = 0
     append_sum = false
-    while current_place <= (initial_column - 1 + size(results, 1)) && steps <= 10
-        # @info steps
-        # clear majority
-        @show current_col
+    while current_place <= (initial_column - 1 + size(results, 1))
         if count(>=(majority_from), calculation[!, current_col+1], dims = 1)[1] == 1
-            @info "Clear Majority"
+            # @info "Clear Majority"
             idx = findfirst(>=(majority_from), calculation[!, current_col+1])
             calculation[idx, :Place] = current_place
             calculation_text[idx, :Place] = string(current_place)
@@ -73,15 +69,12 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
             current_place += 1
             current_col += 1
         else
-            @info "Multiple Majorities"
-            # multiple majorities
+            # @info "Multiple Majorities"
             idx = findall(>=(majority_from), calculation[!, current_col+1])
             tmp_col = copy(current_col)
             while !isempty(idx)
-                @info idx
                 if count(==(maximum(calculation[idx, tmp_col+1])), calculation[idx, tmp_col+1]) == 1
-                    # clear majority
-                    @info "Single maximal majority"
+                    # @info "Single maximal majority"
                     id = idx[findfirst(==(maximum(calculation[idx, tmp_col+1])), calculation[idx, tmp_col+1])]
                     calculation[id, :Place] = current_place
                     calculation_text[id, :Place] = string(current_place)
@@ -97,11 +90,9 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
                     remove!(idx, id)
                 else
                     # equal majority
-                    # needs temporary lookup columns!
-                    # id = findall(==(maximum(calculation[idx, current_col+1]), calculation[idx, current_col+1]))
                     # look at sum of evaluations up to current column
                     if length(findall(==(maximum(sum_of_eval[idx, tmp_col+1])), sum_of_eval[idx, tmp_col+1])) == 1
-                        @info "Single sum minority"
+                        # @info "Single sum minority"
                         id = findfirst(==(minimum(sum_of_eval[idx, tmp_col+1])), sum_of_eval[idx, tmp_col+1])
                         calculation[idx[id], :Place] = current_place
                         calculation_text[idx[id], :Place] = string(current_place)
@@ -112,33 +103,26 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
                         append_sum = true
                         remove!(idx, idx[id])
                     else
-                        @info "else"
+                        # @info "Multiple equal sums"
                         calculation_text[idx, (tmp_col+1)] = string.(calculation[idx, (tmp_col+1)]) .* "*" .* "(" .* string.(sum_of_eval[idx, (tmp_col+1)]) .* ")"
-                        steps += 1
                         tmp_col += 1
                         if tmp_col > max_cols
-                            @info "tmp_cols > max_cols"
+                            # @info "tmp_cols > max_cols"
                             places = range(current_place, length = length(idx))
                             place = mean(places)
                             calculation[idx, :Place] .= place
                             calculation_text[idx, :Place] .= string(place)
                             current_place = maximum(places) + 1
                             calculation[idx, (current_col+1):(max_cols+1)] .= 0
-                            @info current_col
                             idx = []
                             break
                         end
-                        #break
                     end
 
                 end
             end
-
-
             current_col += 1
         end
-        # safety
-        steps += 1
     end
 
     return calculation_text, calculation[!, [:Number, :Place]]
