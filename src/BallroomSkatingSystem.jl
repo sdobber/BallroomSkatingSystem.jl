@@ -2,7 +2,7 @@ module BallroomSkatingSystem
 
 using Reexport
 @reexport using DataFrames
-@reexport using Statistics
+using Statistics
 
 include("helper_functions.jl")
 include("skating_single_dance.jl")

@@ -10,7 +10,7 @@ This package implements the skating system of compiling scores in ballroom dance
 
 
 !!! warning "Disclaimer"
-    This package is currently a *work in progress*! It has not been tested against all corner cases that might emerge in real dancing tournaments. 
+    This package has not been tested against all corner cases that might emerge in real dancing tournaments. 
 
 !!! note
     No sanity checks are performed on the data, like ensuring the correct number of judges for every dance, or making sure that starter numbers coincide. Make sure to feed sanitized data to the functions.

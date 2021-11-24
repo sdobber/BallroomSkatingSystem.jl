@@ -9,7 +9,7 @@ This package implements the skating system of compiling scores in ballroom dance
 
 ## :warning: Disclaimer
 
-This package is currently a *work in progress*! It has not been tested against all corner cases that might emerge in real dancing tournaments. 
+This package has not been tested against all corner cases that might emerge in real dancing tournaments. 
 
 
 ## Installation
