@@ -173,7 +173,7 @@ The calculation of the sum of the individual places can be found in the first re
 places_text
 ```
 
-In this example, both Rule 11 needed to be applied. The separate calculations are reported for Rule 10 in
+In this example, Rule 11 needed to be applied. The separate calculations are reported for Rule 10 in
 ```@example skating_combined
 rule10_11[1]
 ```
