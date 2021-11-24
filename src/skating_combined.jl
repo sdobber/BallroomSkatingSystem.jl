@@ -30,33 +30,26 @@ function skating_combined(dances, results_single_dances, places, reports)
         idx = findall(==(minimum(places[!, :Sum])), places[!, :Sum])
         if length(idx) == 1
             # @info "Minimum sum"
-            index = idx[1]
-            places[index, :Place] = current_place
-            places[index, :Sum] = 1000 + current_place
-            places_text[index, :Place] = string(current_place)
+            write_places!(places, places_text, idx, current_place)
             current_place += 1
         else
             # Rule 10
             id = findall(==(maximum(rule10_counts[idx, current_place+1])), rule10_counts[idx, current_place+1])
             if length(id) == 1
                 # @info "Minimum better places"
-                index = idx[id[1]]
-                places[index, :Place] = current_place
-                places[index, :Sum] = 1000 + current_place
-                places_text[index, :Place] = string(current_place)
+                index = idx[id]
+                write_places!(places, places_text, index, current_place)
                 rule10_text[idx, current_place+1] .= string.(rule10_counts[idx, current_place+1])
-                rule10_text[index, :Place] = string(current_place)
+                rule10_text[index, :Place] .= string(current_place)
                 current_place += 1
             else
                 # @info "Minimum better summed places"
                 i = findall(==(minimum(rule10_sums[idx[id], current_place+1])), rule10_sums[idx[id], current_place+1])
                 if length(i) == 1
-                    index = idx[id[i[1]]]
-                    places[index, :Place] = current_place
-                    places[index, :Sum] = 1000 + current_place
-                    places_text[index, :Place] = string(current_place)
+                    index = idx[id[i]]
+                    write_places!(places, places_text, index, current_place)
                     rule10_text[idx[id], current_place+1] .= string.(rule10_counts[idx[id], current_place+1]) .* "*" .* "(" .* string.(rule10_sums[idx[id], (current_place+1)]) .* ")"
-                    rule10_text[index, :Place] = string(current_place)
+                    rule10_text[index, :Place] .= string(current_place)
                     current_place += 1
                 else
                     # Rule 11
@@ -65,31 +58,24 @@ function skating_combined(dances, results_single_dances, places, reports)
                         initial_place = current_place, initial_column = current_place, depth = size(places, 1))
                     if length(i) == 2
                         index = idx[id[i]]
-                        places[index, :Place] .= skating_result[!, :Place]
-                        places[index, :Sum] .= 1000 + current_place
-                        places_text[index, :Place] .= skating_text[!, :Place]
+                        write_places!(places, places_text, index, skating_result[!, :Place], skating_text[!, :Place], current_place)
                         rule11_text[index, (current_place+1):end] .= skating_text[!, (current_place+1):end]
                         current_place += 2
                     else
                         j = findall(==(minimum(skating_result[!, :Place])), skating_result[!, :Place])
                         if length(j) == 1
-                            index = idx[id[i[j[1]]]]
-                            places[index, :Place] = skating_result[j[1], :Place]
-                            places[index, :Sum] = 1000 + current_place
-                            places_text[index, :Place] = skating_text[j[1], :Place]
+                            index = idx[id[i[j]]]
+                            write_places!(places, places_text, index, skating_result[j, :Place], skating_text[j, :Place], current_place)
                             rule11_text[idx[id[i]], (current_place+1):(end-1)] .= skating_text[!, (current_place+1):(end-1)]
-                            rule11_text[index, :Place] = skating_text[j[1], :Place]
+                            rule11_text[index, :Place] .= skating_text[j, :Place]
                             current_place += 1
                         else
                             # @info "Rule 11 Tie"
                             # shared place
-                            # code can probably be joined with the above part
                             index = idx[id[i[j]]]
                             place_list = range(current_place, length = length(j))
                             place = mean(place_list)
-                            places[index, :Place] .= place
-                            places[index, :Sum] .= 1000 + current_place
-                            places_text[index, :Place] .= string(place)
+                            write_places!(places, places_text, index, place, current_place)
                             rule11_text[index, (current_place+1):(end-1)] .= skating_text[!, (current_place+1):(end-1)]
                             rule11_text[index, :Place] .= string(place)
                             current_place = maximum(place_list) + 1
@@ -132,4 +118,23 @@ function get_rule11_table(results_single_dances)
     numbers = DataFrame(Number = results_single_dances[1][!, :Number])
     df_cat = hcat([df[!, Not(:Number)] for df in results_single_dances]..., makeunique = true)
     return hcat(numbers, df_cat)
+end
+
+"""
+    write_places!(places, places_text, index, current_place)
+    write_places!(places, places_text, index, place_to_write, current_place)    
+    write_places!(places, places_text, index, place_to_write, place_to_write_text, current_place)
+
+Write the result of the skating procedure to the DataFrames containing the final calculation.
+"""
+function write_places!(places, places_text, index, place_to_write, place_to_write_text, current_place)
+    places[index, :Place] .= place_to_write
+    places[index, :Sum] .= 1000 + current_place
+    places_text[index, :Place] .= place_to_write_text
+end
+function write_places!(places, places_text, index, place_to_write, current_place)
+    write_places!(places, places_text, index, place_to_write, string.(place_to_write), current_place)
+end
+function write_places!(places, places_text, index, current_place)
+    write_places!(places, places_text, index, current_place, current_place)
 end

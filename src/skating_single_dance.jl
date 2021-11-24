@@ -112,15 +112,15 @@ end
 Write the result of the skating procedure to the DataFrames containing placement and summary
 information. Remove the parts that are not needed anymore.
 """
-function write_result!(calculation, calculation_text, sum_of_eval, id, current_place, current_col, tmp_col, max_cols;
+function write_result!(calculation, calculation_text, sum_of_eval, index, current_place, current_col, tmp_col, max_cols;
     append_sum = false)
-    calculation[id, :Place] = current_place
-    calculation_text[id, :Place] = string(current_place)
-    str = string(calculation[id, (tmp_col+1)]) * "*"
+    calculation[index, :Place] = current_place
+    calculation_text[index, :Place] = string(current_place)
+    str = string(calculation[index, (tmp_col+1)]) * "*"
     if append_sum
-        str = str * "(" * string(sum_of_eval[id, (tmp_col+1)]) * ")"
+        str = str * "(" * string(sum_of_eval[index, (tmp_col+1)]) * ")"
     end
-    calculation_text[id, (tmp_col+1)] = str
-    calculation_text[id, (tmp_col+2):(max_cols+1)] .= "-"
-    calculation[id, (current_col+1):(max_cols+1)] .= 0
+    calculation_text[index, (tmp_col+1)] = str
+    calculation_text[index, (tmp_col+2):(max_cols+1)] .= "-"
+    calculation[index, (current_col+1):(max_cols+1)] .= 0
 end
