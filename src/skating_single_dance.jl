@@ -103,7 +103,7 @@ end
 Returns the judge majority for a result DataFrame `results`.
 """
 function calc_majority(results)
-    return Int((size(results, 2) - 2) / 2 + 1)
+    return ceil(Int, (size(results, 2) - 2) / 2 + 1)
 end
 
 """
