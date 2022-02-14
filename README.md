@@ -14,7 +14,7 @@ This package has not been tested against all corner cases that might emerge in r
 
 ## Installation
 
-BallroomSkatingSystem.jl is *not* a registered package. To install, type `]` at the Julia REPL to enter package mode, and type
+BallroomSkatingSystem.jl is a registered package. To install, type `]` at the Julia REPL to enter package mode, and type
 ```
-add https://github.com/sdobber/BallroomSkatingSystem.jl
+add BallroomSkatingSystem
 ```
