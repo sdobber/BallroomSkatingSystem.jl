@@ -24,8 +24,8 @@ For calculations on cropped tables, the majority of votes, the initial placement
 the initial column in the tableau where skating should start as well as the desired depth of
 the calculation can be defined by keyword arguments.
 """
-function skating_single_dance(results::DataFrame, majority_from::Int; initial_place::Int = 1,
-    initial_column::Int = 1, depth = size(results, 1))
+function skating_single_dance(results::DataFrame, majority_from::Int; initial_place::Int=1,
+    initial_column::Int=1, depth=size(results, 1))
 
     calculation, sum_of_eval = prepare_sums(results, depth)
 
@@ -38,7 +38,7 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
     tmp_col = initial_column
     append_sum = false
     while current_place <= (initial_column - 1 + size(results, 1))
-        if count(>=(majority_from), calculation[!, current_col+1], dims = 1)[1] == 1
+        if count(>=(majority_from), calculation[!, current_col+1], dims=1)[1] == 1
             # @info "Clear Majority"
             idx = findfirst(>=(majority_from), calculation[!, current_col+1])
             write_result!(calculation, calculation_text, sum_of_eval, idx, current_place, current_col, current_col, max_cols)
@@ -52,17 +52,17 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
                 if count(==(maximum(calculation[idx, tmp_col+1])), calculation[idx, tmp_col+1]) == 1
                     # @info "Single maximal majority"
                     id = idx[findfirst(==(maximum(calculation[idx, tmp_col+1])), calculation[idx, tmp_col+1])]
-                    write_result!(calculation, calculation_text, sum_of_eval, id, current_place, current_col, tmp_col, max_cols; append_sum = append_sum)
+                    write_result!(calculation, calculation_text, sum_of_eval, id, current_place, current_col, tmp_col, max_cols; append_sum=append_sum)
                     current_place += 1
                     append_sum = false
                     remove!(idx, id)
                 else
                     # equal majority
                     # look at sum of evaluations up to current column
-                    if length(findall(==(maximum(sum_of_eval[idx, tmp_col+1])), sum_of_eval[idx, tmp_col+1])) == 1
+                    if length(findall(==(minimum(sum_of_eval[idx, tmp_col+1])), sum_of_eval[idx, tmp_col+1])) == 1
                         # @info "Single sum minority"
                         id = findfirst(==(minimum(sum_of_eval[idx, tmp_col+1])), sum_of_eval[idx, tmp_col+1])
-                        write_result!(calculation, calculation_text, sum_of_eval, idx[id], current_place, current_col, tmp_col, max_cols; append_sum = true)
+                        write_result!(calculation, calculation_text, sum_of_eval, idx[id], current_place, current_col, tmp_col, max_cols; append_sum=true)
                         current_place += 1
                         append_sum = true
                         remove!(idx, idx[id])
@@ -72,7 +72,7 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
                         tmp_col += 1
                         if tmp_col > max_cols
                             # @info "tmp_cols > max_cols"
-                            places = range(current_place, length = length(idx))
+                            places = range(current_place, length=length(idx))
                             place = mean(places)
                             calculation[idx, :Place] .= place
                             calculation_text[idx, :Place] .= string(place)
@@ -92,9 +92,9 @@ function skating_single_dance(results::DataFrame, majority_from::Int; initial_pl
     return calculation_text, calculation[!, [:Number, :Place]]
 end
 
-function skating_single_dance(results::DataFrame; initial_place = 1, initial_column = 1, depth = size(results, 1))
+function skating_single_dance(results::DataFrame; initial_place=1, initial_column=1, depth=size(results, 1))
     return skating_single_dance(results::DataFrame, calc_majority(results);
-        initial_place = initial_place, initial_column = initial_column, depth = depth)
+        initial_place=initial_place, initial_column=initial_column, depth=depth)
 end
 
 """
@@ -113,7 +113,7 @@ Write the result of the skating procedure to the DataFrames containing placement
 information. Remove the parts that are not needed anymore.
 """
 function write_result!(calculation, calculation_text, sum_of_eval, index, current_place, current_col, tmp_col, max_cols;
-    append_sum = false)
+    append_sum=false)
     calculation[index, :Place] = current_place
     calculation_text[index, :Place] = string(current_place)
     str = string(calculation[index, (tmp_col+1)]) * "*"
