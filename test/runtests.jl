@@ -352,4 +352,26 @@ end
         JudgeE=[2, 3, 4, 4, 6, 1])
     calculation, places = skating_single_dance(results)
     @test places[:, :Place] == [2.0, 3.0, 4.5, 4.5, 6.0, 1.0]
+
+    results = DataFrame(Number=[11, 12, 13, 14, 15, 16, 17],
+        JudgeA=[6, 3, 5, 1, 7, 4, 2],
+        JudgeB=[1, 2, 4, 3, 5, 7, 6],
+        JudgeC=[1, 2, 4, 3, 5, 6, 7],
+        JudgeD=[7, 6, 5, 4, 3, 2, 1],
+        JudgeE=[3, 2, 1, 4, 5, 6, 7],
+        JudgeF=[2, 4, 3, 1, 5, 6, 7],
+        JudgeG=[4, 3, 2, 1, 5, 6, 7])
+    calculation, places = skating_single_dance(results)
+    @test places[:, :Place] == [3.0, 2.0, 4.0, 1.0, 5.0, 6.0, 7.0]
+
+    results = DataFrame(Number=[11, 12, 13, 14, 15, 16, 17],
+        JudgeA=[1, 2, 3, 7, 6, 4, 5],
+        JudgeB=[7, 6, 5, 4, 1, 2, 3],
+        JudgeC=[7, 6, 1, 2, 3, 4, 5],
+        JudgeD=[1, 2, 3, 7, 6, 5, 4],
+        JudgeE=[7, 7, 7, 4, 3, 2, 1],
+        JudgeF=[1, 2, 3, 4, 5, 7, 7],
+        JudgeG=[4, 5, 6, 1, 2, 3, 7])
+    calculation, places = skating_single_dance(results)
+    @test places[:, :Place] == [5.0, 7.0, 2.0, 4.0, 1.0, 3.0, 6.0]
 end
