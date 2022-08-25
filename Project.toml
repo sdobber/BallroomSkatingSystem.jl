@@ -1,7 +1,7 @@
 name = "BallroomSkatingSystem"
 uuid = "8aed41a2-23bd-4167-baf7-1f33f6c22702"
 authors = ["Sören Dobberschütz <sdobberschuetz@gmx.net> and contributors"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
